@@ -9,4 +9,4 @@ ROOT_DIR = Path(__file__).parent.parent
 DATA_DIR = ROOT_DIR / "data"
 MODEL_PATH = DATA_DIR / "model.csv"
 DATASET_PATH = DATA_DIR / "data.csv"
-VIZUALISATION_PATH = ROOT_DIR / "viz.png"
+VIZUALISATION_PATH = ROOT_DIR / "vizualisation/viz.png"

@@ -1,5 +1,5 @@
 import numpy as np
-from config import DATASET_PATH
+from config import DATASET_PATH, VIZUALISATION_PATH
 from plot import plot_line, plot_scatter
 from train import train
 from predict import predict
@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 
 def main():
+    """Train the model, evaluate it, and save a summary visualization."""
     try:
         df = pd.read_csv(DATASET_PATH)
     except:
@@ -23,7 +24,7 @@ def main():
     X_test = test_real["km"]
     y_test = test_real["price"]
 
-    t0, t1, costs = train(train_real)
+    t0, t1, costs = train(X_train, y_train)
 
     y_pred_test = predict(X_test)
     y_pred_train = predict(X_train)
@@ -34,6 +35,8 @@ def main():
         X_test,
         y_pred_test,
     )
+
+    print(eval)
 
     fig, axes = plt.subplots(2, 3, figsize=(15, 8))
     fig.subplots_adjust(hspace=0.4)
@@ -47,9 +50,9 @@ def main():
     ax1.set_xlabel("km")
     ax1.set_ylabel("price")
 
-    x = np.linspace(df["km"].min(), df["km"].max())
-    y = t0 + t1 * x
-    ax1.plot(x, y, color="black")
+    model_x = np.linspace(df["km"].min(), df["km"].max())
+    model_y = t0 + t1 * model_x
+    ax1.plot(model_x, model_y, color="black")
 
     # AX2
     ax2.set_title("Residual plot")
@@ -85,11 +88,14 @@ def main():
     ax4.set_ylabel("cost")
 
     # AX6
-    plot_scatter(test_real, y_pred_test, ax6, "Real vs predicted")
+    ax6.scatter(y_test, y_pred_test)
+    ax6.set_title("Real vs predicted")
+    ax6.set_xlabel("Real (price)")
+    ax6.set_ylabel("Predicted (price)")
+    ax6.grid(True)
 
+    # save
     fig.savefig(VIZUALISATION_PATH)
-
-    print(eval)
 
 
 if __name__ == "__main__":

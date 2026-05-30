@@ -10,31 +10,25 @@ from shared import Scaler
 from split import train_test_split
 
 
-def train(data: pd.DataFrame) -> tuple[float, float, list]:
-    """
-    train a model on a dataset with km, price columns to determine price based on mileage.
-    define t0,t1
-    """
-    # raw_data = data.copy()
+def train(X: pd.Series, y: pd.Series) -> tuple[float, float, list]:
+    """Train a linear regression model and return its parameters and cost history."""
 
     t0, t1 = 0.0, 0.0
-    km = pd.Series(data["km"])
-    price = pd.Series(data["price"])
 
-    km_scaler = Scaler(km.min(), km.max())
-    price_scaler = Scaler(price.min(), price.max())
+    km_scaler = Scaler(X.min(), X.max())
+    price_scaler = Scaler(y.min(), y.max())
 
-    km = pd.Series(km_scaler.normalize(km))
-    price = pd.Series(price_scaler.normalize(price))
+    X = pd.Series(km_scaler.normalize(X))
+    y = pd.Series(price_scaler.normalize(y))
 
     costs = []
     for _ in range(0, EPOCH):
-        estimated_price = estimate_price(t0, t1, km)
-        losses = estimated_price - price
+        y_pred = estimate_price(t0, t1, X)
+        losses = y_pred - y
 
         losses = pd.Series(losses)
         t0_signal = np.average(losses)
-        t1_signal = np.average(pd.Series(losses) * km)
+        t1_signal = np.average(pd.Series(losses) * X)
         t0 -= t0_signal * LEARNING_RATE
         t1 -= t1_signal * LEARNING_RATE
 
@@ -46,42 +40,16 @@ def train(data: pd.DataFrame) -> tuple[float, float, list]:
         t0 * price_scaler.range + price_scaler.min - t1_real * km_scaler.min
     )
 
-    thetas = pd.DataFrame(
-        data={
-            "t0": [t0_real],
-            "t1": [t1_real],
-        }
-    )
-
     return t0_real, t1_real, costs
-
-    # x = np.linspace(km.min(), km.max())
-    # y = t0 + t1 * x
-    # x_raw = km_scaler.denormalize(x)
-    # y_raw = price_scaler.denormalize(y)
-
-    # fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(6, 8))
-
-    # ax1.scatter(raw_data["km"], raw_data["price"])
-    # ax1.plot(x_raw, y_raw)
-    # ax1.set_title("price/km regression")
-
-    # ax2.plot(costs)
-    # ax2.set_title("cost reduction")
-    # fig.savefig("viz.png")
-
-    return thetas
 
 
 def main():
-    """
-    export model in DATASET_PATH.
-    model contains: t0,t1 and values used by the Scaler to normalize data.
-    """
+    """Train the model from the dataset and save learned parameters to CSV."""
     df = pd.read_csv(DATASET_PATH)
     start_time = datetime.now().timestamp() * 1000
-    train_df, test_df = train_test_split(df)
-    thetas = train(train_df)
+    train_df, _ = train_test_split(df)
+    t0, t1, _ = train(train_df["km"], train_df["price"])
+    thetas = pd.DataFrame({"t0": [t0], "t1": [t1]})
     end_time = datetime.now().timestamp() * 1000
 
     print(
