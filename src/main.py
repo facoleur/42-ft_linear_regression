@@ -1,11 +1,10 @@
 import numpy as np
 from config import DATASET_PATH, VIZUALISATION_PATH
-from plot import plot_line, plot_scatter
 from train import train
 from predict import predict
 from split import train_test_split
 import pandas as pd
-from evaluate import sse, ssr, sst, r2, mae, mse, rmse, mape, evaluate
+from evaluate import evaluate
 import sys
 import matplotlib.pyplot as plt
 

@@ -3,6 +3,7 @@ from pathlib import Path
 # hyperparams
 LEARNING_RATE = 0.02
 EPOCH = 2000
+RANDOM_STATE = 42
 
 # paths
 ROOT_DIR = Path(__file__).parent.parent

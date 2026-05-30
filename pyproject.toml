@@ -1,0 +1,8 @@
+[tool.black]
+line-length = 79
+target-version = ["py311"]
+
+[tool.pyright]
+pythonVersion = "3.11"
+venvPath = "."
+venv = ".venv"          # ou "env", selon ton dossier
