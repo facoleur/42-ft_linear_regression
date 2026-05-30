@@ -1,0 +1,5 @@
+vizualisation/*
+**/__pycache__
+venv
+en.subject.md
+data/model.csv
