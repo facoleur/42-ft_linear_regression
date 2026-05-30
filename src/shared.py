@@ -31,6 +31,6 @@ def load_model():
     try:
         t = pd.read_csv(MODEL_PATH)
         return (t["t0"].iloc[0], t["t1"].iloc[0])
-    except:
+    except Exception:
         print("Model is not trained. run `train.py` first")
         sys.exit(1)

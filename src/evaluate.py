@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from math import sqrt
@@ -20,7 +19,8 @@ def sse(real: pd.Series, pred: pd.Series) -> float:
 
 
 def r2(real: pd.Series, pred: pd.Series):
-    """Return the coefficient of determination for real and predicted values."""
+    """Return the coefficient of determination
+    for real and predicted values."""
     return 1 - ssr(real, pred) / sst(real)
 
 
@@ -40,7 +40,8 @@ def rmse(real: pd.Series, pred: pd.Series) -> float:
 
 
 def mape(real: pd.Series, pred: pd.Series) -> float:
-    """Return the mean absolute percentage error between real and predicted values."""
+    """Return the mean absolute percentage error between
+    real and predicted values."""
     return 1 / len(real) * sum(abs((real - pred) / real))
 
 

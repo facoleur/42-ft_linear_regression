@@ -1,6 +1,6 @@
 import numpy as np
 from config import DATASET_PATH, VIZUALISATION_PATH
-from train import train
+from train import save_model, train
 from predict import predict
 from split import train_test_split
 import pandas as pd
@@ -13,7 +13,7 @@ def main():
     """Train the model, evaluate it, and save a summary visualization."""
     try:
         df = pd.read_csv(DATASET_PATH)
-    except:
+    except Exception:
         sys.exit("csv not found.")
 
     train_real, test_real = train_test_split(df)
@@ -24,6 +24,7 @@ def main():
     y_test = test_real["price"]
 
     t0, t1, costs = train(X_train, y_train)
+    save_model(t0, t1)
 
     y_pred_test = predict(X_test)
     y_pred_train = predict(X_train)
@@ -35,7 +36,7 @@ def main():
         y_pred_test,
     )
 
-    print(eval)
+    print(eval.to_string(float_format="%.2f"))
 
     fig, axes = plt.subplots(2, 3, figsize=(15, 8))
     fig.subplots_adjust(hspace=0.4)

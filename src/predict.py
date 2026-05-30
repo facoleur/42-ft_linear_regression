@@ -1,9 +1,9 @@
-import pandas as pd
 from shared import load_model
 
 
 def estimate_price(t1, t2, mileage):
-    """Return the estimated price for a mileage using linear model parameters."""
+    """Return the estimated price for a mileage
+    using linear model parameters."""
     return t1 + (t2 * mileage)
 
 

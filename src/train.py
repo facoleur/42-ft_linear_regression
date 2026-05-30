@@ -1,17 +1,15 @@
 from datetime import datetime
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from config import DATASET_PATH, EPOCH, LEARNING_RATE, MODEL_PATH
-from shared import load_model
 from predict import estimate_price
-from predict import predict
 from shared import Scaler
 from split import train_test_split
 
 
 def train(X: pd.Series, y: pd.Series) -> tuple[float, float, list]:
-    """Train a linear regression model and return its parameters and cost history."""
+    """Train a linear regression model and return
+    its parameters and cost history."""
 
     t0, t1 = 0.0, 0.0
 
@@ -43,19 +41,24 @@ def train(X: pd.Series, y: pd.Series) -> tuple[float, float, list]:
     return t0_real, t1_real, costs
 
 
+def save_model(t0: float, t1: float):
+    thetas = pd.DataFrame({"t0": [t0], "t1": [t1]})
+    thetas.to_csv(MODEL_PATH, index=False)
+
+
 def main():
     """Train the model from the dataset and save learned parameters to CSV."""
     df = pd.read_csv(DATASET_PATH)
     start_time = datetime.now().timestamp() * 1000
     train_df, _ = train_test_split(df)
     t0, t1, _ = train(train_df["km"], train_df["price"])
-    thetas = pd.DataFrame({"t0": [t0], "t1": [t1]})
+    save_model(t0, t1)
     end_time = datetime.now().timestamp() * 1000
 
+    dur = int(end_time - start_time)
     print(
-        f"successfully trained model on {len(train_df)} datapoints in {int(end_time - start_time)} ms"
+        f"successfully trained model on {len(train_df)} datapoints in {dur} ms"
     )
-    thetas.to_csv(MODEL_PATH, index=False)
 
 
 if __name__ == "__main__":
